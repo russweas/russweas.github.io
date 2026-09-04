@@ -1,0 +1,31 @@
+---
+.title = "Tools",
+.date = .date("1990-01-01T00:00:00"),
+.layout = "index.shtml",
+---
+
+This is a collection of tools that I currently use.
+
+
+# Random CLI Tools
+
+## Embedded Work
+*scope - serial inspector (better telnet)*
+[scope](https://terminaltrove.com/scope/)
+
+
+## Documentation
+*mandible - breaks down --help docs for CLIs*
+[mandible](https://terminaltrove.com/mandible/)
+
+## Linux OS Management
+
+*rwx - inspector for FS permissions*
+[rwx](https://terminaltrove.com/rwx/)
+
+## Repo management
+
+*drydock - view state of many git repos*
+[drydock](https://terminaltrove.com/drydock/)
+
+
