@@ -13,19 +13,31 @@ This is a collection of tools that I currently use.
 *scope - serial inspector (better telnet)*
 [scope](https://terminaltrove.com/scope/)
 
-
 ## Documentation
 *mandible - breaks down --help docs for CLIs*
 [mandible](https://terminaltrove.com/mandible/)
 
 ## Linux OS Management
-
 *rwx - inspector for FS permissions*
 [rwx](https://terminaltrove.com/rwx/)
 
 ## Repo management
-
 *drydock - view state of many git repos*
 [drydock](https://terminaltrove.com/drydock/)
 
 
+## LLM Coding
+
+crit.md - leave comments on local commits
+
+## VCS
+
+jj-vcs - this is my primary way of interacting with repositories
+
+jjui - this is the TUI I use when I need to visualize the graph beyond a simple `jj log`
+
+oyui - TUI merge editor
+
+### Exploring
+
+jj-vine
