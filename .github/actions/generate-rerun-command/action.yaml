@@ -1,0 +1,69 @@
+name: "Generate Deterministic Re-run Command"
+description: "Parses workflow inputs JSON and git ref into a copy-pasteable gh workflow run command."
+
+inputs:
+  workflow:
+    description: "The workflow filename or ID (e.g., deploy.yml)"
+    required: true
+  ref:
+    description: "The git revision, branch, tag, or SHA"
+    required: true
+  inputs-json:
+    description: "A JSON string containing all workflow inputs"
+    required: true
+    default: "{}"
+
+outputs:
+  command:
+    description: "The generated gh CLI command"
+    value: ${{ steps.generate.outputs.command }}
+
+runs:
+    using: "composite"
+    steps:
+      - name: Generate CLI Command
+        id: generate
+        shell: python3
+        env:
+          INPUT_WORKFLOW: ${{ inputs.workflow }}
+          INPUT_REF: ${{ inputs.ref }}
+          INPUT_INPUTS_JSON: ${{ inputs-json }}
+        run: |
+          import json
+          import os
+          
+          workflow = os.environ.get('INPUT_WORKFLOW')
+          ref = os.environ.get('INPUT_REF')
+          inputs_raw = os.environ.get('INPUT_INPUTS_JSON', '{}')
+          
+          try:
+              inputs_dict = json.loads(inputs_raw)
+          except json.JSONDecodeError:
+              inputs_dict = {}
+          
+          # Build the base command
+          cmd_parts = ["gh workflow run", workflow, f"--ref {ref}"]
+          
+          # Append each input as a field flag
+          for key, value in inputs_dict.items():
+              # Escape double quotes safely if needed, or represent as string
+              safe_val = str(value).replace('"', '\\"')
+              cmd_parts.append(f'-f {key}="{safe_val}"')
+          
+          full_command = " ".join(cmd_parts)
+          
+          # Write to GITHUB_OUTPUT
+          github_output = os.environ.get('GITHUB_OUTPUT')
+          if github_output:
+              with open(github_output, "a") as f:
+                  f.write(f"command={full_command}\n")
+          
+          # Also log it nicely to the Step Summary for easy copying
+          github_step_summary = os.environ.get('GITHUB_STEP_SUMMARY')
+          if github_step_summary:
+              with open(github_step_summary, "a") as f:
+                  f.write("### 🔄 Deterministic Re-run Command\n")
+                  f.write("Run the following command in your terminal to replicate this workflow execution:\n")
+                  f.write(f"```bash\n{full_command}\n```\n")
+          
+          print(f"Generated Command: {full_command}")

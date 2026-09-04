@@ -31,6 +31,13 @@ jobs:
       - name: Setup Zine
         uses: kristoff-it/setup-zine@v2
 
+      - name: Generate Re-run Command
+        uses: ./.github/actions/generate-rerun-cmd
+        with:
+          workflow: "deploy.yml"
+          ref: ${{ github.sha }}
+          inputs-json: ${{ toJson(inputs) }}
+
       - name: Build
         run: zine release
 
